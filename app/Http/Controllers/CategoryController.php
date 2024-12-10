@@ -99,4 +99,23 @@ class CategoryController extends Controller
             }
         }
     }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file');
+        $fileContents = file($file->getPathname());
+
+        foreach ($fileContents as $line) {
+            $data = str_getcsv($line);
+
+            Category::create([
+                'name' => $data[0],
+            ]);
+        }
+
+        return response()->json([
+            'message' => 'File imported, Categories added to table',
+            'status' => 1
+        ]);
+    }
 }
