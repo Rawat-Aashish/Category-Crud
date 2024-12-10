@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\CategoryImport;
 use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
+use Maatwebsite\Excel\Facades\Excel;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -102,19 +104,25 @@ class CategoryController extends Controller
 
     public function import(Request $request)
     {
-        $file = $request->file('file');
-        $fileContents = file($file->getPathname());
+        // $file = $request->file('file');
+        // $fileContents = file($file->getPathname());
 
-        foreach ($fileContents as $line) {
-            $data = str_getcsv($line);
+        // foreach ($fileContents as $line) {
+        //     $data = str_getcsv($line);
 
-            Category::create([
-                'name' => $data[0],
-            ]);
-        }
+        //     Category::create([
+        //         'name' => $data[0],
+        //     ]);
+        // }
 
+        // return response()->json([
+        //     'message' => 'File imported, Categories added to table',
+        //     'status' => 1
+        // ]);
+
+        Excel::import(new CategoryImport, request()->file('file'));
         return response()->json([
-            'message' => 'File imported, Categories added to table',
+            'message' => 'Your file has been successfully imported to Categories table',
             'status' => 1
         ]);
     }

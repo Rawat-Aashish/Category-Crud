@@ -15,12 +15,13 @@ Route::post('/sign-in', [UserController::class, 'signIn']);
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/logout/{user}', [UserController::class, 'logout']);
 Route::post('/forgot-password', [UserController::class, 'forgot_password']);
+Route::get('/export-subcat', [SubCategoryController::class, 'export']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('category')->group(function () {
         Route::post('/create', [CategoryController::class, 'create']);
-        Route::post('/import-categories', [CategoryController::class,'import']);
+        Route::post('/import-categories', [CategoryController::class, 'import']);
         Route::get('/list', [CategoryController::class, 'index']);
         Route::post('/{id}/update', [CategoryController::class, 'update']);
         Route::post('/{id}/delete', [CategoryController::class, 'delete']);
@@ -31,6 +32,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/list', [SubCategoryController::class, 'index']);
         Route::post('/{id}/update', [SubCategoryController::class, 'update']);
         Route::post('/{id}/delete', [SubCategoryController::class, 'delete']);
+        // Route::get('/export-subcat', [SubCategoryController::class, 'export']);
     });
 
     Route::post('/change-password/{user}', [UserController::class, 'change_password']);

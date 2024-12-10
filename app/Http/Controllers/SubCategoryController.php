@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\SubCategoryExport;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 use function PHPUnit\Framework\isEmpty;
 
@@ -90,5 +92,10 @@ class SubCategoryController extends Controller
                 'status' => 1
             ]);
         }
+    }
+
+    public function export(Request $request)
+    {
+        return Excel::download(new SubCategoryExport, 'subcategory.xlsx');
     }
 }
