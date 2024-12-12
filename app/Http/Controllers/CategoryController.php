@@ -13,14 +13,37 @@ use function PHPUnit\Framework\isEmpty;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::all();
+        $categories = Category::with(['sub_categories'=>function($query)use($request){
+            $search = '%' . $request->search . '%';
+            $query = $query->where('name','like',$search);
+        }]);
+
+        if ($request->search) {
+            // $categories = $categories->where(function ($query) use ($request, $categories) {
+            //     $query = $categories->where("name", "like", "%" . $request->search . "%");
+            // })->orWhereHas('sub_categories', function ($query) use ($request, $categories) {
+            //     $query = $categories->where('name', 'like', '%' . $request->search . '%');
+            // });
+            $search = '%' . $request->search . '%';
+            $categories = $categories->where(function ($query) use ($search) {
+                $query = $query->where('name','like',$search);
+            })->orWhereHas('sub_categories',function($query) use($search){
+                $query = $query->where('name','like',$search);
+            });
+            // ->withWhereHas('sub_categories',function($query) use($search){
+            //     return $query->where('name','like','%'. $search . '%');
+            // });
+            // dd($categories->get());
+        } else {
+            $categories = Category::with('sub_categories');
+        }
 
         return response()->json([
             'message' => 'Categories Fetched Successfully!!',
             'total_categories' => $categories->count(),
-            'data' => $categories,
+            'data' => $categories->get(),
             'status' => 1
         ]);
     }

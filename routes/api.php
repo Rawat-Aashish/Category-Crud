@@ -22,7 +22,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('category')->group(function () {
         Route::post('/create', [CategoryController::class, 'create']);
         Route::post('/import-categories', [CategoryController::class, 'import']);
-        Route::get('/list', [CategoryController::class, 'index']);
+        Route::post('/list', [CategoryController::class, 'index']);
         Route::post('/{id}/update', [CategoryController::class, 'update']);
         Route::post('/{id}/delete', [CategoryController::class, 'delete']);
     });
